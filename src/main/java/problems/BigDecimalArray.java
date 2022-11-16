@@ -16,8 +16,8 @@ public class BigDecimalArray {
                 .map(s -> new BigDecimal(s))
                 .toArray(BigDecimal[]::new);
     }
-    private BigDecimalArray(final BigDecimal[] clone) {
-        this.elements = clone;
+    private BigDecimalArray(final BigDecimal[] array) {
+        this.elements = array;
     }
 
     public static BigDecimalArray of(final String[] stringEntries) {
