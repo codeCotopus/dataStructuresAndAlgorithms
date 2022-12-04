@@ -1,14 +1,17 @@
 package adventofcode.aoc2022;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @Slf4j
 public class Day2Test {
-
     private static final Map<String, Integer> secondStrategy = Map.of(
             "A X", 3 + 0,
             "A Y", 1 + 3,
@@ -34,30 +37,26 @@ public class Day2Test {
 
     @Test
     public void sampleFirstPart() {
-        compute(Day2Input.SAMPLE, firstStrategy);
+        assertEquals( compute(Day2Input.SAMPLE, firstStrategy),15);
     }
 
     @Test
     public void inputFirstPart() {
-        compute(Day2Input.INPUT, firstStrategy);
+        assertEquals(compute(Day2Input.INPUT, firstStrategy),11150);
     }
 
     @Test
     public void sampleSecondPart() {
-        compute(Day2Input.SAMPLE, secondStrategy);
+        assertEquals(compute(Day2Input.SAMPLE, secondStrategy),12);
     }
 
     @Test
     public void inputSecondPart() {
-        compute(Day2Input.INPUT, secondStrategy);
+        assertEquals(compute(Day2Input.INPUT, secondStrategy),8295);
     }
 
-    private static void compute(String sample, Map<String, Integer> strategy) {
+    private static int compute(String sample, Map<String, Integer> strategy) {
         String[] split = sample.split("\n");
-        int total = 0;
-        for (String round : split) {
-            total += strategy.get(round);
-        }
-        log.info("Total Score is {}", total);
+        return Arrays.stream(split).mapToInt(strategy::get).sum();
     }
 }
