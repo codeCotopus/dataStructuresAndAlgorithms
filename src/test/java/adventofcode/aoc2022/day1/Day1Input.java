@@ -1,4 +1,4 @@
-package adventofcode.aoc2022;
+package adventofcode.aoc2022.day1;
 
 public class Day1Input {
     public final static String sampleInput = """

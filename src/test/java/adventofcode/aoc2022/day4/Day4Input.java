@@ -1,4 +1,4 @@
-package adventofcode.aoc2022;
+package adventofcode.aoc2022.day4;
 
 public class Day4Input {
 

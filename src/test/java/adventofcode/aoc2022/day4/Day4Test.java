@@ -1,4 +1,4 @@
-package adventofcode.aoc2022;
+package adventofcode.aoc2022.day4;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,25 +13,25 @@ import static org.junit.jupiter.api.Assertions.*;
 public class Day4Test {
     @Test
     public void inputPart1() {
-        assertEquals(431, computePart1(Day4Input.INPUT, new FirstPartComputer()));
+        assertEquals(431, computePart1(Day4Input.INPUT, new FirstPartDay4Strategy()));
     }
 
     @Test
     public void samplePart1() {
-        assertEquals(2, computePart1(Day4Input.SAMPLE, new FirstPartComputer()));
+        assertEquals(2, computePart1(Day4Input.SAMPLE, new FirstPartDay4Strategy()));
     }
 
     @Test
     public void inputPart2() {
-        assertEquals(823, computePart1(Day4Input.INPUT, new SecondPartComputer()));
+        assertEquals(823, computePart1(Day4Input.INPUT, new SecondPartDay4Strategy()));
     }
 
     @Test
     public void samplePart2() {
-        assertEquals(4, computePart1(Day4Input.SAMPLE, new SecondPartComputer()));
+        assertEquals(4, computePart1(Day4Input.SAMPLE, new SecondPartDay4Strategy()));
     }
 
-    private static int computePart1(String input, Computer setOperation) {
+    private static int computePart1(String input, Day4Strategy setOperation) {
         String[] pairs = input.split("\n");
         int total = 0;
         for (String pair : pairs) {
@@ -46,26 +46,21 @@ public class Day4Test {
             Set<Integer> firstElf = IntStream.rangeClosed(boundaries[0][0], boundaries[0][1]).boxed().collect(Collectors.toSet());
             Set<Integer> secondElf = IntStream.rangeClosed(boundaries[1][0], boundaries[1][1]).boxed().collect(Collectors.toSet());
 
-            total = setOperation.compute(total, firstElf, secondElf);
+            total = setOperation.applyStrategy(total, firstElf, secondElf);
         }
         return total;
     }
 
-    private static class SecondPartComputer implements Computer {
+    private static class SecondPartDay4Strategy implements Day4Strategy {
         @Override
-        public int compute(int total, Set<Integer> firstElf, Set<Integer> secondElf) {
-            for (Integer s : firstElf) {
-                if (secondElf.contains(s)) {
-                    total++;
-                    break;
-                }
-            }
+        public int applyStrategy(int total, Set<Integer> firstElf, Set<Integer> secondElf) {
+            if (firstElf.stream().anyMatch(secondElf::contains)) total++;
             return total;
         }
     }
 
-    private static class FirstPartComputer implements Computer {
-        public int compute(int total, Set<Integer> firstElf, Set<Integer> secondElf) {
+    private static class FirstPartDay4Strategy implements Day4Strategy {
+        public int applyStrategy(int total, Set<Integer> firstElf, Set<Integer> secondElf) {
             if (firstElf.containsAll(secondElf) || secondElf.containsAll(firstElf)) total++;
             return total;
         }
