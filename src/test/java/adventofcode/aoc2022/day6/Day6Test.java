@@ -8,29 +8,41 @@ import java.util.Set;
 
 import static adventofcode.aoc2022.day6.Day6Input.INPUT;
 import static adventofcode.aoc2022.day6.Day6Input.SAMPLE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class Day6Test {
 
     @Test
     public void part1sample(){
-      log.info("Marker found {}",  findMarker(SAMPLE));
+      assertEquals(7,findMarker(SAMPLE, 3));
     }
 
     @Test
     public void part1input(){
-        log.info("Marker found {}",  findMarker(INPUT));
+        assertEquals(1542, findMarker(INPUT, 3));
     }
 
-    private static int findMarker(String input) {
-        for (int i = 3; i < input.length(); i++) {
+    @Test
+    public void part2sample(){
+       assertEquals(19, findMarker(SAMPLE,13));
+    }
+
+    @Test
+    public void part2input(){
+        assertEquals(3153,  findMarker(INPUT,13));
+    }
+
+    private static int findMarker(String input, int patternSize) {
+        for (int i = patternSize; i < input.length(); i++) {
             Set seen = new HashSet();
             boolean markerSeen = false;
 
-            for (int j = i-3; j <=i ; j++) {
+            for (int j = i- patternSize; j <=i ; j++) {
                if (seen.contains(input.charAt(j))) break;
+
                 seen.add(input.charAt(j));
-               if (seen.size() == 4) markerSeen = true;
+               if (seen.size() == patternSize +1) markerSeen = true;
             }
 
             if (markerSeen)
