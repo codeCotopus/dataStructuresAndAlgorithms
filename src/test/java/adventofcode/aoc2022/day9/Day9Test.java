@@ -18,37 +18,36 @@ public class Day9Test {
 
     @Test
     public void part1Sample() {
-        assertEquals(13, solvePart1(Day9Input.SAMPLE));
+        assertEquals(13, solvePart2(Day9Input.SAMPLE, 1));
     }
 
     @Test
     public void part1Input() {
-        assertEquals(6376, solvePart1(Day9Input.INPUT));
+        assertEquals(6376, solvePart2(Day9Input.INPUT, 1));
     }
 
     @Test
     public void part2Sample1() {
-        assertEquals(1, solvePart2(Day9Input.SAMPLE));
+        assertEquals(1, solvePart2(Day9Input.SAMPLE, 9));
     }
 
     @Test
     public void part2Sample2() {
-        assertEquals(36, solvePart2(Day9Input.SAMPLE2));
+        assertEquals(36, solvePart2(Day9Input.SAMPLE2, 9));
     }
 
     @Test
     public void part2Input() {
-        assertEquals(2607, solvePart2(Day9Input.INPUT));
+        assertEquals(2607, solvePart2(Day9Input.INPUT, 9));
     }
 
 
-    private int solvePart2(String input) {
+    private int solvePart2(String input, int numberOfKnots) {
         List<Pair<String, Integer>> motions = getMotions(input);
+
         Pair<Integer, Integer> headCurrentPosition = Pair.of(0, 0);
 
-        List<Knot> knots = IntStream.range(0, 9).mapToObj(i -> new Knot(0, 0)).collect(Collectors.toList());
-
-
+        List<Knot> knots = IntStream.range(0, numberOfKnots).mapToObj(i -> new Knot(0, 0)).collect(Collectors.toList());
 
         Set<Pair<Integer, Integer>> positionsVisitedByTail = new HashSet<>();
 
@@ -67,37 +66,8 @@ public class Day9Test {
                 }
 
                 knots.get(0).followHead(headCurrentPosition);
-                IntStream.range(1, 9).forEach(k -> knots.get(k).followHead(knots.get(k-1).position));
-                positionsVisitedByTail.add(knots.get(8).position);
-            }
-        }
-        return positionsVisitedByTail.size();
-    }
-
-    private int solvePart1(String input) {
-        List<Pair<String, Integer>> motions = getMotions(input);
-        Pair<Integer, Integer> headCurrentPosition = Pair.of(0, 0);
-
-        List<Knot> knots = IntStream.range(0, 9).mapToObj(i -> new Knot(0, 0)).collect(Collectors.toList());
-
-        Knot tail = new Knot(0, 0);
-        Set<Pair<Integer, Integer>> positionsVisitedByTail = new HashSet<>();
-
-
-        for (Pair<String, Integer> motion : motions) {
-            for (int i = 0; i < motion.getRight(); i++) {
-                switch (motion.getLeft()) {
-                    case "U" ->
-                            headCurrentPosition = Pair.of(headCurrentPosition.getLeft() + 1, headCurrentPosition.getRight());
-                    case "R" ->
-                            headCurrentPosition = Pair.of(headCurrentPosition.getLeft(), headCurrentPosition.getRight() + 1);
-                    case "D" ->
-                            headCurrentPosition = Pair.of(headCurrentPosition.getLeft() - 1, headCurrentPosition.getRight());
-                    case "L" ->
-                            headCurrentPosition = Pair.of(headCurrentPosition.getLeft(), headCurrentPosition.getRight() - 1);
-                }
-                tail.followHead(headCurrentPosition);
-                positionsVisitedByTail.add(tail.position);
+                IntStream.range(1, numberOfKnots).forEach(k -> knots.get(k).followHead(knots.get(k - 1).position));
+                positionsVisitedByTail.add(knots.get(numberOfKnots - 1).position);
             }
         }
         return positionsVisitedByTail.size();
@@ -200,13 +170,13 @@ public class Day9Test {
             int xMovement = headX - position.getLeft(); // 0,1,2;
             int yMovement = headY - position.getRight(); // 0,1,2;
 
-            if (abs(xMovement) > abs(yMovement)){
+            if (abs(xMovement) > abs(yMovement)) {
                 this.position = Pair.of(xMovement > 0 ? headX - 1 : headX + 1, headY);
             }
-            if (abs(xMovement) < abs(yMovement)){
+            if (abs(xMovement) < abs(yMovement)) {
                 this.position = Pair.of(headX, yMovement > 0 ? headY - 1 : headY + 1);
             }
-            if (abs(xMovement) == abs(yMovement)){
+            if (abs(xMovement) == abs(yMovement)) {
                 this.position = Pair.of(xMovement > 0 ? headX - 1 : headX + 1, yMovement > 0 ? headY - 1 : headY + 1);
             }
 
