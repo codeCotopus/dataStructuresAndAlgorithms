@@ -40,7 +40,6 @@ public class Day10Test {
         for (int i = 1; i < cycles.size(); i++) {
             boolean pixelOn = isPixelOn((i-(i/40)*40) - 1, cycles.get(i));
             System.out.print(pixelOn ?"#":".");
-            //log.info("pixel {} is on?:{}. registry: {}",i-1,isPixelOn(i-1,cycles.get(i)),cycles.get(i));
             if (i %40 ==0)System.out.print("\n");
         }
 
