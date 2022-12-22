@@ -1,11 +1,11 @@
 package concepts;
 
-import adventofcode.aoc2022.day12.PathNode;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
+import java.time.Instant;
 import java.time.Month;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
@@ -26,6 +26,7 @@ public class Junit5ParametrizedTests {
             return number % 2 != 0;
         }
     }
+
     @ParameterizedTest
     @ValueSource(ints = {1, 3, 5, -3, 15, Integer.MAX_VALUE})
     void isOddShouldReturnTrueForOddNumbers(int number) {
@@ -42,6 +43,7 @@ public class Junit5ParametrizedTests {
             return input == null || input.trim().isEmpty();
         }
     }
+
     @ParameterizedTest
     @NullSource // Used to pass nulls
     @ValueSource(strings = {"", " "})
@@ -62,23 +64,22 @@ public class Junit5ParametrizedTests {
 
     @ParameterizedTest
     @EnumSource(value = Month.class) // 12 months in the Enum
-    public void getValueForMonth_isAlwaysBetweenOneAndTwelve(Month month){
-        final int monthNumber =month.getValue();
-        assertTrue(monthNumber >=1 && monthNumber <=12);
+    public void getValueForMonth_isAlwaysBetweenOneAndTwelve(Month month) {
+        final int monthNumber = month.getValue();
+        assertTrue(monthNumber >= 1 && monthNumber <= 12);
     }
 
     @ParameterizedTest
-    @EnumSource(value = Month.class,  names = {"APRIL", "JUNE", "SEPTEMBER", "NOVEMBER"}) //Just named elements
-    public void someMonths_Are30DaysLong(Month month){
+    @EnumSource(value = Month.class, names = {"APRIL", "JUNE", "SEPTEMBER", "NOVEMBER"}) //Just named elements
+    public void someMonths_Are30DaysLong(Month month) {
         final boolean isLeapYear = false;
-        assertEquals(30,month.length(isLeapYear));
+        assertEquals(30, month.length(isLeapYear));
     }
 
 
-
     /*
-    * IN this case named elements will be excluded.
-    * */
+     * IN this case named elements will be excluded.
+     * */
     @ParameterizedTest
     @EnumSource(
             value = Month.class,
@@ -91,8 +92,8 @@ public class Junit5ParametrizedTests {
 
 
     /*
-    * We can also Use Regular expressions...
-    * */
+     * We can also Use Regular expressions...
+     * */
 
     @ParameterizedTest
     @EnumSource(value = Month.class, names = ".+BER", mode = EnumSource.Mode.MATCH_ANY)
@@ -102,15 +103,16 @@ public class Junit5ParametrizedTests {
         assertTrue(months.contains(month));
     }
     /*
-    * CSV Literals. These are useful when Actual And expected are required.
-    * */
+     * CSV Literals. These are useful when Actual And expected are required.
+     * */
 
     @ParameterizedTest
-    @CsvSource ({"Test,TEST","tEst,TEST"})
+    @CsvSource({"Test,TEST", "tEst,TEST"})
     void toUpperCase_ShouldGenerateTheExpectedUppercaseValue(String input, String expected) {
         String actualValue = input.toUpperCase();
         assertEquals(expected, actualValue);
     }
+
     @ParameterizedTest
     @CsvSource(value = {"test:test", "tEst:test", "Java:java"}, delimiter = ':')
     void toLowerCase_ShouldGenerateTheExpectedLowercaseValue(String input, String expected) {
@@ -120,35 +122,52 @@ public class Junit5ParametrizedTests {
 
 
     /*
-    * Methods : Up to here, Simple parameters where passed. it is impossible to pass complex objects without
-    * dirty hacks.
-    *
-    * For complex arguments, we can pass methods as argument sources
-    * */
-    @ParameterizedTest
-    @MethodSource("provideStringIsBlank") // If method is on different class, just use fully qualified name.
+     * Methods : Up to here, Simple parameters where passed. it is impossible to pass complex objects without
+     * dirty hacks.
+     *
+     * For complex arguments, we can pass methods as argument sources
+     * */
+    @ParameterizedTest ( name = "{index}: {1} should return {0} on this very special test")
+    @MethodSource("provideStringIsBlank")
+    // If method is on different class, just use fully qualified name.
 
-    void isBlank_ShouldReturnTrueforBlankAndNullStrings(final String input, final boolean expected){
-        assertEquals(expected,Strings.isBlank(input));
+    void isBlank_ShouldReturnTrueforBlankAndNullStrings(final String input, final boolean expected) {
+        assertEquals(expected, Strings.isBlank(input));
     }
 
     public static Stream<Arguments> provideStringIsBlank() {
         return Stream.of(
-                Arguments.of(null,true),
-                Arguments.of("",true),
-                Arguments.of(" ",true),
-                Arguments.of("not blank",false)
+                Arguments.of(null, true),
+                Arguments.of("", true),
+                Arguments.of(" ", true),
+                Arguments.of("not blank", false)
         );
     }
 
     @ParameterizedTest
-    @MethodSource // hmm, no method name ...
+    @MethodSource
+        // hmm, no method name ...
     void isBlank_ShouldReturnTrueForNullOrBlankStringsOneArgument(String input) {
         assertTrue(Strings.isBlank(input));
     }
 
     private static Stream<String> isBlank_ShouldReturnTrueForNullOrBlankStringsOneArgument() {
         return Stream.of(null, "", "  ");
+    }
+
+
+    //Custom class parametrized tests
+    @ParameterizedTest
+    @MethodSource
+    void canTest_CustomCass(final Date point) {
+        assertTrue(point.compareTo(Date.from(Instant.now()))<1);
+
+    }
+
+    private  static Stream<Date> canTest_CustomCass() {
+        return Stream.of(
+                Date.from(Instant.now())
+        );
     }
 
 
