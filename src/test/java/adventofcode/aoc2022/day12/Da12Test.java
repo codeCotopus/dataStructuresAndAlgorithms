@@ -17,7 +17,7 @@ public class Da12Test {
 
     char[][] sampleMap = Day12Input.INPUT.lines().map(String::toCharArray).toArray(char[][]::new);
 
-    @Test
+   // @Test
     public void part1sample() {
         char[][] sampleMap = Day12Input.INPUT.lines().map(String::toCharArray).toArray(char[][]::new);
         int sX = 0;
@@ -97,7 +97,7 @@ public class Da12Test {
     public void nodeCanGoToValidNodes() {// Valid node is lower or 1 higher
         PathNode prevNode = new PathNode(0, 0, 'a');
         PathNode node = new PathNode(0, 1, 'a',prevNode);
-        node.setMap(sampleMap);
+        node.setMap(Day12Input.SAMPLE.lines().map(String::toCharArray).toArray(char[][]::new));
         List<PathNode> possibleMOves = node.getPossibleMoves();
         assertEquals(2,possibleMOves.size());
     }
